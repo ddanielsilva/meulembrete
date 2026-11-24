@@ -1,0 +1,42 @@
+import { type NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
+
+export const dynamic = "force-dynamic";
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const token_hash = searchParams.get("token_hash");
+  const type = searchParams.get("type") as
+    | "email"
+    | "recovery"
+    | "invite"
+    | "email_change"
+    | null;
+  const next = searchParams.get("next") ?? "/lembretes";
+
+  if (token_hash && type) {
+    const response = NextResponse.redirect(new URL(next, request.url));
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://placeholder.supabase.co",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "placeholder-anon-key",
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              response.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const { error } = await supabase.auth.verifyOtp({ token_hash, type });
+    if (!error) return response;
+  }
+
+  return NextResponse.redirect(new URL("/login?error=confirm_failed", request.url));
+}
