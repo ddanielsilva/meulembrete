@@ -24,6 +24,7 @@ interface VoiceSheetProps {
   stage: VoiceSaveStage | null;
   onStop: () => void;
   onRetry: () => void;
+  onTypeInstead: () => void;
 }
 
 function formatDuration(totalSeconds: number): string {
@@ -42,6 +43,7 @@ export function VoiceSheet({
   stage,
   onStop,
   onRetry,
+  onTypeInstead,
 }: VoiceSheetProps) {
   return (
     <Dialog
@@ -135,6 +137,18 @@ export function VoiceSheet({
             </Button>
           )}
         </div>
+
+        {!stage && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="w-full text-muted-foreground"
+            onClick={onTypeInstead}
+          >
+            Prefiro digitar o lembrete
+          </Button>
+        )}
       </DialogContent>
     </Dialog>
   );

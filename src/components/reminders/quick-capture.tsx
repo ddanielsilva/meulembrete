@@ -100,12 +100,14 @@ export function QuickCapture({ onAdd }: QuickCaptureProps) {
         <div className="flex items-center gap-2">
           <Input
             ref={inputRef}
+            id="quick-capture-input"
             value={text}
             onChange={(event) => setText(event.target.value)}
-            placeholder="O que você precisa lembrar?"
+            placeholder="Escreva um lembrete..."
             maxLength={2000}
             enterKeyHint="done"
             autoComplete="off"
+            aria-label="Escrever novo lembrete"
             className="h-11 border-0 bg-transparent px-1 text-base shadow-none focus-visible:ring-0"
           />
           <Button

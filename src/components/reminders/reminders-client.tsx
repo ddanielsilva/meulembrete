@@ -327,6 +327,12 @@ export function RemindersClient({ userId }: { userId: string }) {
           setVoiceError(null);
           void start();
         }}
+        onTypeInstead={() => {
+          closeVoice();
+          window.setTimeout(() => {
+            document.getElementById("quick-capture-input")?.focus();
+          }, 150);
+        }}
       />
 
       {editing && (
